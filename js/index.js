@@ -187,6 +187,28 @@ function updateGameArea() {
     myHealth.update();
     myHealthNum.text=health;
     myHealthNum.update();
+    if (leftKey == true) {
+      myGamePiece.speedX = -5.25;
+    }
+    if (rightKey == true) {
+      myGamePiece.speedX = 5.25;
+    }
+    if (rightKey == false) {
+      if (leftKey == false) {
+        myGamePiece.speedX = 0;
+      }
+    }
+    if (upKey == true) {
+      myGamePiece.speedY = -5.25;
+    }
+    if (downKey == true) {
+      myGamePiece.speedY = 5.25;
+    }
+    if (downKey == false) {
+      if (upKey == false) {
+        myGamePiece.speedY = 0;
+      }
+    }
     myGamePiece.newPos();
     myGamePiece.update();
   }
@@ -194,6 +216,10 @@ function updateGameArea() {
 
 document.onkeydown = checkKey;
 document.onkeyup = stopKey;
+var rightKey = false;
+var leftKey = false;
+var upKey = false;
+var downKey = false;
 
 function checkKey(e) {
     key = e || window.event;
@@ -201,22 +227,22 @@ function checkKey(e) {
     if (key.keyCode == '38') {
         // up arrow
         // console.log("Up");
-        myGamePiece.speedY = -5;
+        upKey = true;
     }
     else if (key.keyCode == '40') {
         // down arrow
         // console.log("Down");
-       myGamePiece.speedY = 5;
+       downKey = true;
     }
     else if (key.keyCode == '37') {
        // left arrow
        // console.log("Left");
-       myGamePiece.speedX = -5;
+       leftKey = true;
     }
     else if (key.keyCode == '39') {
        // right arrow
        // console.log("Right");
-       myGamePiece.speedX = 5;
+       rightKey = true;
     }
 
 }
@@ -227,22 +253,22 @@ function stopKey(e) {
     if (key.keyCode == '38') {
         // up arrow
         // console.log("Up");
-        myGamePiece.speedY = -0;
+        upKey = false;
     }
     else if (key.keyCode == '40') {
         // down arrow
         // console.log("Down");
-       myGamePiece.speedY = 0;
+       downKey = false;
     }
     else if (key.keyCode == '37') {
        // left arrow
        // console.log("Left");
-       myGamePiece.speedX = 0;
+       leftKey = false;
     }
     else if (key.keyCode == '39') {
        // right arrow
        // console.log("Right");
-       myGamePiece.speedX = 0;
+       rightKey = false;
     }
 
 }
