@@ -4,12 +4,14 @@ var myObstacles = [];
 var myObstacles2 = [];
 var myObstacles3 = [];
 var myObstacles4 = [];
+var myObstacles5 = [];
 var health = 92;
 var poison = 0;
 var myScore;
 var myHealth;
 var myHealth;
 var myHealthNum;
+var hasPressed = false;
 var audio = new Audio('megalovania.mp3');
 
 audio.addEventListener('ended', function() {
@@ -28,8 +30,10 @@ function startGame() {
     myScore.color = "#fff";
     myHealth.color = "#f00";
     myHealthNum.color = "#f00";
+    if (hasPressed == false) {
+      setInterval(poisonUpdate, 1000)
+    }
     myGameArea.start();
-    setInterval(poisonUpdate, 1000)
     audio.play();
 }
 
@@ -41,7 +45,10 @@ var myGameArea = {
         this.context = this.canvas.getContext("2d");
         document.getElementById('gameContent').appendChild(this.canvas);
         this.frameNo = 0;
-        this.interval = setInterval(updateGameArea, 20);
+        if (hasPressed == false) {
+          this.interval = setInterval(updateGameArea, 20);
+          hasPressed = true;
+        }
         },
     clear : function() {
         this.context.clearRect(0, 0, this.canvas.width, this.canvas.height);
@@ -140,6 +147,13 @@ function updateGameArea() {
             myObstacles4.splice(i, 1);
         }
     }
+    for (i = 0; i < myObstacles5.length; i += 1) {
+        if (myGamePiece.crashWith(myObstacles5[i])) {
+          if (myGamePiece.speedY == 0 && myGamePiece.speedX == 0) {
+            hurt(1)
+          }
+        }
+    }
     myGameArea.clear();
     myGameArea.frameNo += 1;
     if (myGameArea.frameNo == 1 || everyinterval(30)) {
@@ -150,7 +164,16 @@ function updateGameArea() {
         minGap = 50;
         maxGap = 200;
         gap = Math.floor(Math.random()*(maxGap-minGap+1)+minGap);
-        select = Math.floor(Math.random()*13+1);
+        select = Math.floor(Math.random()*4+1);
+        if (myGameArea.frameNo >= 1500) {
+          select = Math.floor(Math.random()*13+1);
+        }
+        else if (myGameArea.frameNo >= 1000) {
+          select = Math.floor(Math.random()*12+1);
+        }
+        else if (myGameArea.frameNo >= 500) {
+          select = Math.floor(Math.random()*8+1);
+        }
         if (select == 1 || select == 2 || select == 3 || select == 4) {
           myObstacles.push(new component(10, height, "white", x, 0));
           myObstacles.push(new component(10, x - height - gap, "white", x, height + gap));
@@ -164,6 +187,12 @@ function updateGameArea() {
         else if (select == 13) {
           myObstacles4.push(new component(10, 50, "#cfc", x, Math.floor(Math.random()*450+50)));
         }
+    }
+    if (myGameArea.frameNo == 1 || everyinterval(120)) {
+      if (myGameArea.frameNo >= 2000) {
+        x = myGameArea.canvas.width;
+        myObstacles5.push(new component(50, 10, "#fff", x, Math.floor(Math.random()*450+50)));
+      }
     }
     for (i = 0; i < myObstacles.length; i += 1) {
         myObstacles[i].x += -5;
@@ -181,6 +210,10 @@ function updateGameArea() {
         myObstacles4[i].x += -5;
         myObstacles4[i].update();
     }
+    for (i = 0; i < myObstacles5.length; i += 1) {
+        myObstacles5[i].x += -8;
+        myObstacles5[i].update();
+    }
     myScore.text="SCORE: " + myGameArea.frameNo;
     myScore.update();
     myHealth.text="Health:";
@@ -188,10 +221,10 @@ function updateGameArea() {
     myHealthNum.text=health;
     myHealthNum.update();
     if (leftKey == true) {
-      myGamePiece.speedX = -5.25;
+      myGamePiece.speedX = -5;
     }
     if (rightKey == true) {
-      myGamePiece.speedX = 5.25;
+      myGamePiece.speedX = 5;
     }
     if (rightKey == false) {
       if (leftKey == false) {
@@ -199,10 +232,10 @@ function updateGameArea() {
       }
     }
     if (upKey == true) {
-      myGamePiece.speedY = -5.25;
+      myGamePiece.speedY = -5;
     }
     if (downKey == true) {
-      myGamePiece.speedY = 5.25;
+      myGamePiece.speedY = 5;
     }
     if (downKey == false) {
       if (upKey == false) {
@@ -211,6 +244,7 @@ function updateGameArea() {
     }
     myGamePiece.newPos();
     myGamePiece.update();
+    console.log(poison);
   }
 }
 
@@ -317,5 +351,24 @@ function everyinterval(n) {
     return false;
 }
 
+sansDances = document.getElementById('sansDances');
+
+sansDances.style.opacity = 0;
 start.onclick = function() {
+  dead = false
+  myGamePiece;
+  myObstacles = [];
+  myObstacles2 = [];
+  myObstacles3 = [];
+  myObstacles4 = [];
+  myObstacles5 = [];
+  health = 92;
+  poison = 0;
+  myScore;
+  myHealth;
+  myHealth;
+  myHealthNum;
+  audio.currentTime = 0;
+  sansDances.style.opacity = 0.2;
+  startGame()
 }
