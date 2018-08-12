@@ -8,6 +8,9 @@ var myObstacles5 = [];
 var health = 92;
 var poison = 0;
 var myScore;
+var myHighScore;
+var highScore = 0;
+var score = 0;
 var myHealth;
 var myHealth;
 var myHealthNum;
@@ -25,8 +28,10 @@ function startGame() {
     myGamePiece = new component(30, 30, "red", 10, 120);
     myGamePiece.gravity = 0.05;
     myScore = new component("30px", "Consolas", "white", 280, 40, "text");
-    myHealth = new component("30px", "Consolas", "red", 280, 80, "text");
-    myHealthNum = new component("30px", "Consolas", "red", 375, 80, "text");
+    myHighScore = new component("30px", "Consolas", "white", 200, 80, "text");
+    myHighScore.color = "#fff";
+    myHealth = new component("30px", "Consolas", "red", 280, 120, "text");
+    myHealthNum = new component("30px", "Consolas", "red", 375, 120, "text");
     myScore.color = "#fff";
     myHealth.color = "#f00";
     myHealthNum.color = "#f00";
@@ -156,7 +161,7 @@ function updateGameArea() {
     }
     myGameArea.clear();
     myGameArea.frameNo += 1;
-    if (myGameArea.frameNo == 1 || everyinterval(30)) {
+    if (myGameArea.frameNo == 1 || everyinterval(100)) {
         x = myGameArea.canvas.width;
         minHeight = 20;
         maxHeight = 200;
@@ -214,8 +219,10 @@ function updateGameArea() {
         myObstacles5[i].x += -8;
         myObstacles5[i].update();
     }
-    myScore.text="SCORE: " + myGameArea.frameNo;
+    myScore.text="SCORE: " + score;
     myScore.update();
+    myHighScore.text="HIGH SCORE: " + highScore;
+    myHighScore.update();
     myHealth.text="Health:";
     myHealth.update();
     myHealthNum.text=health;
@@ -245,6 +252,10 @@ function updateGameArea() {
     myGamePiece.newPos();
     myGamePiece.update();
     console.log(poison);
+    score = score + 1;
+    if (highScore < score) {
+      highScore = highScore + 1;
+    }
   }
 }
 
@@ -370,5 +381,6 @@ start.onclick = function() {
   myHealthNum;
   audio.currentTime = 0;
   sansDances.style.opacity = 0.2;
+  score = 0;
   startGame()
 }
